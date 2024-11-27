@@ -68,24 +68,28 @@ window.addEventListener('scroll', () => {
 });
 
 // Validação simples do formulário
+const contactForm = document.querySelector('#contact');
+contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-    // Se todos os campos forem válidos, enviar o e-mail
+    const inputs = contactForm.querySelectorAll('input, textarea');
+    let isValid = true;
+
+    inputs.forEach(input => {
+        const errorMessage = input.nextElementSibling; 
+        if (input.value.trim() === '') {
+            isValid = false;
+            input.style.border = '2px solid red';
+            errorMessage.textContent = `${input.name} é obrigatório!`;
+        } else {
+            input.style.border = '1px solid #ddd';
+            errorMessage.textContent = '';
+        }
+    });
+
     if (isValid) {
-        const formData = {
-            name: document.querySelector('#name').value,
-            email: document.querySelector('#email').value,
-            message: document.querySelector('#message').value,
-        };
-        // Enviar os dados para o Email
-        emailjs.send('seu_servico_id', 'seu_modelo_email_id', formData)
-            .then((response) => {
-                alert('Formulário enviado com sucesso!');
-                contactForm.reset(); // Limpa o formulário
-            })
-            .catch((error) => {
-                alert('Erro ao enviar o formulário. Tente novamente.');
-                console.error('Erro ao enviar e-mail:', error);
-            });
+        alert('Formulário enviado com sucesso!');
+        contactForm.reset();
     } else {
         alert('Por favor, preencha todos os campos!');
     }
