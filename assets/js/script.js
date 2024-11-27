@@ -49,11 +49,6 @@ cards.forEach(card => {
     });
 });
 
-// Recupera preferência ao carregar
-if (localStorage.getItem('theme') === 'dark') {
-    body.classList.add('dark-mode');
-}
-
 // Animar as barras de progresso ao visualizar a seção
 window.addEventListener('scroll', () => {
     const skillsSection = document.querySelector('#skills');
@@ -73,25 +68,24 @@ window.addEventListener('scroll', () => {
 });
 
 // Validação simples do formulário
-const contactForm = document.querySelector('#contact form');
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
 
-    const inputs = contactForm.querySelectorAll('input, textarea');
-    let isValid = true;
-
-    inputs.forEach(input => {
-        if (input.value.trim() === '') {
-            isValid = false;
-            input.style.border = '2px solid red';
-        } else {
-            input.style.border = '1px solid #ddd';
-        }
-    });
-
+    // Se todos os campos forem válidos, enviar o e-mail
     if (isValid) {
-        alert('Formulário enviado com sucesso!');
-        contactForm.reset();
+        const formData = {
+            name: document.querySelector('#name').value,
+            email: document.querySelector('#email').value,
+            message: document.querySelector('#message').value,
+        };
+        // Enviar os dados para o Email
+        emailjs.send('seu_servico_id', 'seu_modelo_email_id', formData)
+            .then((response) => {
+                alert('Formulário enviado com sucesso!');
+                contactForm.reset(); // Limpa o formulário
+            })
+            .catch((error) => {
+                alert('Erro ao enviar o formulário. Tente novamente.');
+                console.error('Erro ao enviar e-mail:', error);
+            });
     } else {
         alert('Por favor, preencha todos os campos!');
     }
